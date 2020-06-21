@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BeSpoked.Data;
 using BeSpoked.Data.Entities;
+using BeSpoked.Models;
+using static BeSpoked.Models.SalespersonDetailsViewModel;
 
 namespace BeSpoked.Controllers
 {
@@ -32,6 +34,17 @@ namespace BeSpoked.Controllers
             {
                 return NotFound();
             }
+            //else if (quarter == null)
+            //{
+            //    quarter = 1;
+            //}
+            //else if( quarter < 1)
+            //{
+            //    quarter = 1;
+            //}else if(quarter > 4)
+            //{
+            //    quarter = 4;
+            //}
 
             var salesperson = await _context.Salespeople
                 .FirstOrDefaultAsync(m => m.id == id);
@@ -40,7 +53,45 @@ namespace BeSpoked.Controllers
                 return NotFound();
             }
 
-            return View(salesperson);
+            var sales = _context.Sales
+                                    .Where(s => s.Salesperson.id == salesperson.id)
+                                        //&& s.SaleDate >= new DateTime(DateTime.Now.Year, 1, 1)
+                                        //&& s.SaleDate < new DateTime(DateTime.Now.Year, 3, 1))
+                                    .Include(s => s.Product)
+                                    .Include(s => s.Customer)
+                                    .Include(s => s.Salesperson)
+                                    .ToList();
+
+            return View(
+                new SalespersonDetailsViewModel
+                {
+                    Salesperson = salesperson,
+                    Sales = sales,
+                    Quarters = new List<SelectListItem>()
+                    {
+                        new SelectListItem
+                        {
+                            Value = FiscalQuarters.Q1.ToString(),
+                            Text = $"{FiscalQuarters.Q1} {DateTime.Now.Year}"
+                        },
+                        new SelectListItem
+                        {
+                            Value = FiscalQuarters.Q2.ToString(),
+                            Text = $"{FiscalQuarters.Q2} {DateTime.Now.Year}"
+                        },
+                        new SelectListItem
+                        {
+                            Value = FiscalQuarters.Q3.ToString(),
+                            Text = $"{FiscalQuarters.Q3} {DateTime.Now.Year}"
+                        },
+                        new SelectListItem
+                        {
+                            Value = FiscalQuarters.Q4.ToString(),
+                            Text = $"{FiscalQuarters.Q4} {DateTime.Now.Year}"
+                        },
+                    }
+                }
+            );
         }
 
         // GET: Salespersons/Create
@@ -58,6 +109,12 @@ namespace BeSpoked.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_context.Salespeople.Any(s => s.FirstName == salesperson.FirstName.Trim() && s.LastName == salesperson.LastName.Trim()))
+                {
+                    ViewBag.ErrorMessage = "This salesperson already exists in the system";
+                    return View(salesperson);
+                };
+
                 _context.Add(salesperson);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

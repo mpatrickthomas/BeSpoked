@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "uF3si88sOu1IXD8xvZF/elxPIxkSEzQfhnrzMtObnSdcm5cYvnSq9JZNoNrQzebQWJJcqZ5dbvXPs6FF6HyhVQ==",
+  "dgSpecHash": "RfYEussfN/hZY9XE+Sk02H+gji3oY91hBA/MwKa2Ndii2wZz+e06ziGy9lZUjWBlW8RZbzOhF3d2q1EXnNqznQ==",
   "success": true,
   "projectFilePath": "C:\\GitHub\\BeSpoked\\BeSpoked\\BeSpoked.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\thoma\\.nuget\\packages\\bootstrap.datepicker\\1.8.0.1\\bootstrap.datepicker.1.8.0.1.nupkg.sha512",
     "C:\\Users\\thoma\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\thoma\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.extensions\\3.1.5\\microsoft.aspnetcore.mvc.razor.extensions.3.1.5.nupkg.sha512",
     "C:\\Users\\thoma\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.runtimecompilation\\3.1.5\\microsoft.aspnetcore.mvc.razor.runtimecompilation.3.1.5.nupkg.sha512",

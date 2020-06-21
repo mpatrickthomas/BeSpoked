@@ -28,6 +28,7 @@ namespace BeSpoked.Data.Entities
 
         [Required]
         [Display(Name = "Start Date")]
+        [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
     }
 }

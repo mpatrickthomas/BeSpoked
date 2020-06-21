@@ -358,7 +358,6 @@ C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
-C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.csprojAssemblyReference.cache
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.Workspaces.dll
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\Microsoft.Data.Sqlite.dll
@@ -421,9 +420,6 @@ C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\runtimes\win-arm\native\e_sq
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll
 C:\GitHub\BeSpoked\BeSpoked\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll
-C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.csproj.CoreCompileInputs.cache
-C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.MvcApplicationPartsAssemblyInfo.cs
-C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.MvcApplicationPartsAssemblyInfo.cache
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Salespersons\Create.cshtml.g.cs
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Salespersons\Delete.cshtml.g.cs
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Salespersons\Details.cshtml.g.cs
@@ -444,3 +440,8 @@ C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Sales\Delete.csh
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Sales\Details.cshtml.g.cs
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Sales\Edit.cshtml.g.cs
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Sales\Index.cshtml.g.cs
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.csproj.CoreCompileInputs.cache
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.MvcApplicationPartsAssemblyInfo.cs
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.MvcApplicationPartsAssemblyInfo.cache
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.csprojAssemblyReference.cache
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Salespersons\ComissionReport.cshtml.g.cs

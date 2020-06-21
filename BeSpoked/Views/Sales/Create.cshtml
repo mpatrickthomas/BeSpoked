@@ -1,4 +1,4 @@
-﻿@model BeSpoked.Data.Entities.Sale
+﻿@model BeSpoked.Models.SaleCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,9 +13,32 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="SaleDate" class="control-label"></label>
-                <input asp-for="SaleDate" class="form-control" />
-                <span asp-validation-for="SaleDate" class="text-danger"></span>
+                @Html.HiddenFor(model => model.Sale.id)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Customers, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.SelectedCustomer, Model.Customers ?? new List<SelectListItem>(), "-Please select-")
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Products, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.SelectedProduct, Model.Products ?? new List<SelectListItem>(), "-Please select-")
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Salespeople, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.SelectedSalesperson, Model.Salespeople ?? new List<SelectListItem>(), "-Please select-")
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Sale.SaleDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Sale.SaleDate, new { @type = "date", @class = "form-control datepicker", @Value = Model.Sale.SaleDate.ToString("yyyy-MM-dd") })
+                        @Html.ValidationMessageFor(model => model.Sale.SaleDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

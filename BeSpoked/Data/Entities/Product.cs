@@ -21,10 +21,12 @@ namespace BeSpoked.Data.Entities
 
         [Required]
         [Display(Name="Purchase Price")]
+        [DataType(DataType.Currency)]
         public decimal PurchasePrice{ get; set; }
 
         [Required]
         [Display(Name = "Sale Price")]
+        [DataType(DataType.Currency)]
         public decimal SalePrice { get; set; }
 
         [Required]

@@ -1,0 +1,43 @@
+﻿@model SalespersonDetailsViewModel
+@{
+    ViewData["Title"] = "ComissionReport";
+}
+
+<h1>Comission Report</h1>
+<div class="form-group">
+    @Html.LabelFor(model => model.Quarters, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.SelectedQuarter, Model.Quarters)
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Sales.FirstOrDefault().SaleDate)
+            </th>
+            <th>Product</th>
+            <th>Comission</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Sales)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaleDate)
+                </td>
+                <td>
+                    @($"{item.Product.Manufacturer} {item.Product.Name}")
+                </td>
+                <td>
+                    @((item.Product.SalePrice * (item.Product.ComissionPercentage/ 100)).ToString("C"))
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<hr />
+<h5>Total Comission: @(Model.Sales.Sum(item => item.Product.SalePrice * (item.Product.ComissionPercentage / 100)).ToString("C"))</h5>
+

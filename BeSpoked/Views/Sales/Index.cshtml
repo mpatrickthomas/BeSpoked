@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BeSpoked.Data.Entities.Sale>
+﻿@model SaleIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,27 +9,73 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+@using (Html.BeginForm())
+{
+<div class="row">
+    <form asp-action="Index">
+            <div class="form-group" style="padding-right: 10px">
+                @Html.TextBoxFor(model => model.StartDate, new { @type = "date", @class = "form-control datepicker", @Value = Model.StartDate.Value.ToString("yyyy-MM-dd") })
+            </div>
+            <p>to</p>
+            <div class="form-group" style="padding-left: 10px">
+                @Html.TextBoxFor(model => model.EndDate, new { @type = "date", @class = "form-control datepicker", @Value = Model.EndDate.Value.ToString("yyyy-MM-dd") })
+            </div>
+            <div class="form-group" style="padding-left: 10px">
+                <input type="submit" value="Filter" class="btn btn-primary" />
+            </div>
+    </form>
+</div>
+}
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.SaleDate)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Sales.FirstOrDefault().Product.Name)</th>
+            <th>Customer</th>
+            <th>@Html.DisplayNameFor(model => model.Sales.FirstOrDefault().SaleDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Sales.FirstOrDefault().Product.SalePrice)</th>
+            <th>Salesperson</th>
+            @*<th>@Html.DisplayNameFor(model => model.Salesperson.FirstName)</th>
+                <th>@Html.DisplayNameFor(model => model.Salesperson.LastName)</th>*@
+            <th>Comission</th>
             <th></th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SaleDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Sales)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Manufacturer)
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.FirstName)
+                    @Html.DisplayFor(modelItem => item.Customer.LastName)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.SaleDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Product.SalePrice)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salesperson.FirstName)
+                    @Html.DisplayFor(modelItem => item.Salesperson.LastName)
+                </td>
+                <td>
+                    @(
+                ((item.Product.ComissionPercentage / 100) * item.Product.SalePrice).ToString("C")
+                )
+                </td>
+
+                <td>
+
+                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+
+                    <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+
+                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+
+                </td>
+
+            </tr>
+        }
     </tbody>
 </table>

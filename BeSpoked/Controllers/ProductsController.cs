@@ -58,6 +58,12 @@ namespace BeSpoked.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_context.Products.Any(p => p.Name == product.Name.Trim() && p.Manufacturer == product.Manufacturer.Trim()))
+                {
+                    ViewBag.ErrorMessage = "This product already exists in the system";
+                    return View(product);
+                };
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

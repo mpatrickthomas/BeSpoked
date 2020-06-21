@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BeSpoked.Data;
 using BeSpoked.Data.Entities;
+using BeSpoked.Models;
 
 namespace BeSpoked.Controllers
 {
@@ -20,9 +21,30 @@ namespace BeSpoked.Controllers
         }
 
         // GET: Sales
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.
+        //        Sales
+        //        .Include(s => s.Customer)
+        //        .Include(s => s.Product)
+        //        .Include(s => s.Salesperson)
+        //        .ToListAsync());
+        //}
+
+        public async Task<IActionResult> Index(SaleIndexViewModel viewModel)
         {
-            return View(await _context.Sales.ToListAsync());
+            SaleIndexViewModel saleIndex = new SaleIndexViewModel
+            {
+                Sales = _context.
+                Sales.Where(s => s.SaleDate >= (viewModel.StartDate ?? DateTime.MinValue) && s.SaleDate <= (viewModel.EndDate ?? DateTime.MaxValue))
+                .Include(s => s.Customer)
+                .Include(s => s.Product)
+                .Include(s => s.Salesperson)
+                .ToList(),
+                StartDate = viewModel.StartDate?? DateTime.MinValue,
+                EndDate = viewModel.EndDate ?? DateTime.MaxValue
+            };
+            return View(saleIndex);
         }
 
         // GET: Sales/Details/5
@@ -44,9 +66,29 @@ namespace BeSpoked.Controllers
         }
 
         // GET: Sales/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            SaleCreateViewModel viewModel = new SaleCreateViewModel() {
+                Salespeople = _context.Salespeople.Select(sp => new SelectListItem
+                {
+                    Value = sp.id.ToString(),
+                    Text = $"{sp.FirstName} {sp.LastName}"
+                }),
+                Customers = _context.Customers.Select(c => new SelectListItem
+                {
+                    Value = c.id.ToString(),
+                    Text = $"{c.FirstName} {c.LastName}"
+                }),
+                Products = _context.Products.Select(p => new SelectListItem
+                {
+                    Value = p.id.ToString(),
+                    Text = $"{p.Manufacturer} {p.Name}"
+                }),
+                Sale = new Sale()
+            };
+
+            return View(viewModel);
+            //return View();
         }
 
         // POST: Sales/Create
@@ -54,15 +96,22 @@ namespace BeSpoked.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,SaleDate")] Sale sale)
+        public async Task<IActionResult> Create(SaleCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                Sale sale = new Sale
+                {
+                    Salesperson = _context.Salespeople.First(sp => sp.id.ToString() == viewModel.SelectedSalesperson),
+                    Customer = _context.Customers.First(c => c.id.ToString() == viewModel.SelectedCustomer),
+                    Product = _context.Products.First(p => p.id.ToString() == viewModel.SelectedProduct),
+                    SaleDate = viewModel.Sale.SaleDate
+                };
                 _context.Add(sale);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(sale);
+            return View(viewModel);
         }
 
         // GET: Sales/Edit/5

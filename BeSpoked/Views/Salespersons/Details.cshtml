@@ -1,4 +1,4 @@
-﻿@model BeSpoked.Data.Entities.Salesperson
+﻿@model SalespersonDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,50 +11,88 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.DisplayNameFor(model => model.Salesperson.FirstName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.Salesperson.FirstName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
+            @Html.DisplayNameFor(model => model.Salesperson.LastName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
+            @Html.DisplayFor(model => model.Salesperson.LastName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
+            @Html.DisplayNameFor(model => model.Salesperson.Address)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
+            @Html.DisplayFor(model => model.Salesperson.Address)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
+            @Html.DisplayNameFor(model => model.Salesperson.PhoneNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
+            @Html.DisplayFor(model => model.Salesperson.PhoneNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
+            @Html.DisplayNameFor(model => model.Salesperson.StartDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
+            @Html.DisplayFor(model => model.Salesperson.StartDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TerminationDate)
+            @Html.DisplayNameFor(model => model.Salesperson.TerminationDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TerminationDate)
+            @Html.DisplayFor(model => model.Salesperson.TerminationDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Manager)
+            @Html.DisplayNameFor(model => model.Salesperson.Manager)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Manager)
+            @Html.DisplayFor(model => model.Salesperson.Manager)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Salesperson.id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<hr/>
+<h2>Comissions Report</h2>
+<div class="form-group">
+    @Html.LabelFor(model => model.Quarters, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(model => model.SelectedQuarter, Model.Quarters)
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Sales.FirstOrDefault().SaleDate)
+            </th>
+            <th>Product</th>
+            <th>Comission</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Sales)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaleDate)
+            </td>
+            <td>
+                @($"{item.Product.Manufacturer} {item.Product.Name}")
+            </td>
+            <td>
+                @((item.Product.SalePrice * (item.Product.ComissionPercentage/ 100)).ToString("C"))
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>
+<hr />
+<h5>Total Comission: @(Model.Sales.Sum(item => item.Product.SalePrice * (item.Product.ComissionPercentage / 100)).ToString("C"))</h5>
