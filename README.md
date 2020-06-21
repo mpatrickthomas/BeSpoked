@@ -22,14 +22,15 @@ They are asking you to design a simple sales tracking application to help track 
 - [x]	Display a list of products
 - [x]	Update a product
 - [x]	Display a list of customers
-- [ ]	Display a list of sales, including the Product, Customer, Date, Price, Salesperson, and Salesperson Commission.
-- [ ] Filter sales by date range.  
-- [ ] Create a sale
-- [ ] Display a quarterly salesperson commission report
+- [x]	Display a list of sales, including the Product, Customer, Date, Price, Salesperson, and Salesperson Commission.
+- [x] Filter sales by date range.  
+- [x] Create a sale
+- [x] Display a quarterly salesperson commission report
+- [ ] Display a toggle to show the current quarter being shown 
 
 #### Additional Requirements
-- [ ] No duplicate product can be entered. 
-- [ ] No duplicate salesperson can be entered. 
+- [x] No duplicate product can be entered. 
+- [x] No duplicate salesperson can be entered. 
 
 #### Non-functional Requirements
 - [x] Publish the source code to an online source code repository of your choosing.
@@ -37,6 +38,6 @@ They are asking you to design a simple sales tracking application to help track 
 
 #### Stretch Goals
 - [ ] Additional styling
-- [ ] Date pickers (jQuery?)
+- [x] Date pickers (jQuery?)
 - [ ] Duplicate product and salesperson entries should be gracefully rejected with a user friendly error message
 - [ ] Repository with interface to separate the controllers and the DbContext class
