@@ -4,9 +4,7 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete @($"{Model.FirstName} {Model.LastName}")?</h3>
 <div>
     <h4>Customer</h4>
     <hr />
@@ -42,7 +40,7 @@
             @Html.DisplayFor(model => model.StartDate)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |

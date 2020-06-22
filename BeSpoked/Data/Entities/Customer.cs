@@ -21,9 +21,11 @@ namespace BeSpoked.Data.Entities
 
         [Required]
         public string Address { get; set; }
-        
+
         [Required]
         [Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber)]
+        [Phone]
         public string PhoneNumber { get; set; }
 
         [Required]

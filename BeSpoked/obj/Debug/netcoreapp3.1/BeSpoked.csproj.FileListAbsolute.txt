@@ -449,3 +449,4 @@ C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Delete
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Details.cshtml.g.cs
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Edit.cshtml.g.cs
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Index.cshtml.g.cs
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.csprojAssemblyReference.cache

@@ -84,7 +84,7 @@ namespace BeSpoked.Controllers
                 return NotFound();
             }
 
-            var discount = _context.Discounts.Include(d => d.Product).FirstOrDefault(d => d.id == id);
+            var discount = await _context.Discounts.Include(d => d.Product).FirstOrDefaultAsync(d => d.id == id);
             if (discount == null)
             {
                 return NotFound();
@@ -104,7 +104,7 @@ namespace BeSpoked.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 try
                 {

@@ -40,7 +40,7 @@ namespace BeSpoked.Controllers
         {
             if (id == null) return NotFound();
 
-            var sale = await _context.Sales.FirstOrDefaultAsync(m => m.id == id);
+            var sale = await _context.Sales.Include(s => s.Product).Include(s => s.Customer).FirstOrDefaultAsync(m => m.id == id);
             if (sale == null) return NotFound();
 
             return View(sale);
@@ -101,10 +101,31 @@ namespace BeSpoked.Controllers
         {
             if (id == null) return NotFound();
 
-            var sale = await _context.Sales.FindAsync(id);
+            var sale = await _context.Sales.Include(s => s.Product).Include(s => s.Customer).Include(s => s.Salesperson).FirstOrDefaultAsync(s => s.id == id);
             if (sale == null) return NotFound();
-
-            return View(sale);
+            var viewModel = new SaleCreateViewModel()
+            {
+                Salespeople = _context.Salespeople.Select(sp => new SelectListItem
+                {
+                    Value = sp.id.ToString(),
+                    Text = $"{sp.FirstName} {sp.LastName}"
+                }),
+                Customers = _context.Customers.Select(c => new SelectListItem
+                {
+                    Value = c.id.ToString(),
+                    Text = $"{c.FirstName} {c.LastName}"
+                }),
+                Products = _context.Products.Select(p => new SelectListItem
+                {
+                    Value = p.id.ToString(),
+                    Text = $"{p.Manufacturer} {p.Name}"
+                }),
+                Sale = sale,
+                SelectedCustomer = sale.Customer.id.ToString(),
+                SelectedProduct = sale.Product.id.ToString(),
+                SelectedSalesperson = sale.Salesperson?.id.ToString() ?? _context.Salespeople.FirstOrDefault().id.ToString()
+            };
+            return View(viewModel);
         }
 
         // POST: Sales/Edit/5
@@ -112,25 +133,29 @@ namespace BeSpoked.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,SaleDate")] Sale sale)
+        public async Task<IActionResult> Edit(int? id, SaleCreateViewModel viewModel)
         {
-            if (id != sale.id) return NotFound();
+            if (id != viewModel.Sale.id) return NotFound();
 
             if (this.ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(sale);
+                    viewModel.Sale.Salesperson = _context.Salespeople.First(sp => sp.id.ToString() == viewModel.SelectedSalesperson);
+                    viewModel.Sale.Customer = _context.Customers.First(c => c.id.ToString() == viewModel.SelectedCustomer);
+                    viewModel.Sale.Product = _context.Products.First(p => p.id.ToString() == viewModel.SelectedProduct);
+
+                    _context.Update(viewModel.Sale);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SaleExists(sale.id)) return NotFound();
+                    if (!SaleExists(viewModel.Sale.id)) return NotFound();
                     else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sale);
+            return View(viewModel);
         }
 
         // GET: Sales/Delete/5
