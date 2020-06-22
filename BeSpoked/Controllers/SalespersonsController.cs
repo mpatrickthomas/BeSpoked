@@ -169,6 +169,9 @@ namespace BeSpoked.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var salesperson = await _context.Salespeople.FindAsync(id);
+            var sales = _context.Sales.Where(s => s.Salesperson.id == id).ToList();
+            foreach (var sale in sales) _context.Sales.Remove(sale);
+
             _context.Salespeople.Remove(salesperson);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

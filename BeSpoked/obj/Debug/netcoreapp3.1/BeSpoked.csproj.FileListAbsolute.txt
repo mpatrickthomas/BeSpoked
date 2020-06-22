@@ -444,3 +444,8 @@ C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\staticwebassets\BeSpoked.Sta
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.dll
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.pdb
 C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\BeSpoked.genruntimeconfig.cache
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Create.cshtml.g.cs
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Delete.cshtml.g.cs
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Details.cshtml.g.cs
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Edit.cshtml.g.cs
+C:\GitHub\BeSpoked\BeSpoked\obj\Debug\netcoreapp3.1\Razor\Views\Discounts\Index.cshtml.g.cs

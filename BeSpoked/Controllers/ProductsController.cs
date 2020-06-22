@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BeSpoked.Data;
 using BeSpoked.Data.Entities;
+using System.Collections.Generic;
 
 namespace BeSpoked.Controllers
 {
@@ -105,6 +106,12 @@ namespace BeSpoked.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
+            var sales = _context.Sales.Where(s => s.Product.id == id).ToList();
+            foreach (var sale in sales) _context.Sales.Remove(sale);
+
+            var discounts = _context.Discounts.Where(d => d.Product.id == id).ToList();
+            foreach (var discount in discounts) _context.Discounts.Remove(discount);
+
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

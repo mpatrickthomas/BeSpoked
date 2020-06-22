@@ -13,12 +13,16 @@ namespace BeSpoked.Data.Entities
 
         [Display(Name = "Begin Date")]
         [DataType(DataType.Date)]
-        public DateTime BeginDate { get; set; }
+        [Required]
+        public DateTime? BeginDate { get; set; }
 
         [Display(Name = "End Date")]
         [DataType(DataType.Date)]
+        [Required]
         public DateTime? EndDate { get; set; }
 
+        [Required]
+        [Display(Name = "% off")]
         public decimal DiscountPercentage { get; set; }
     }
 }
