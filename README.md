@@ -26,7 +26,7 @@ They are asking you to design a simple sales tracking application to help track 
 - [x] Filter sales by date range.  
 - [x] Create a sale
 - [x] Display a quarterly salesperson commission report
-- [ ] Display a toggle to show the current quarter being shown 
+- [x] Display a toggle to show the current quarter being shown 
 
 #### Additional Requirements
 - [x] No duplicate product can be entered. 
@@ -37,7 +37,7 @@ They are asking you to design a simple sales tracking application to help track 
 - [ ] ~~Optional: Host in Azure.~~
 
 #### Stretch Goals
-- [ ] Additional styling
+- [x] Additional styling
 - [x] Date pickers (jQuery?)
-- [ ] Duplicate product and salesperson entries should be gracefully rejected with a user friendly error message
-- [ ] Repository with interface to separate the controllers and the DbContext class
+- [x] Duplicate product and salesperson entries should be gracefully rejected with a user friendly error message
+- [ ] ~~Repository with interface to separate the controllers and the DbContext class
