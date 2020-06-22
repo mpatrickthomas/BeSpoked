@@ -40,4 +40,4 @@ They are asking you to design a simple sales tracking application to help track 
 - [x] Additional styling
 - [x] Date pickers (jQuery?)
 - [x] Duplicate product and salesperson entries should be gracefully rejected with a user friendly error message
-- [ ] ~~Repository with interface to separate the controllers and the DbContext class
+- [ ] ~~Repository with interface to separate the controllers and the DbContext class~~
