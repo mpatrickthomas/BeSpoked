@@ -15,33 +15,21 @@ namespace BeSpoked.Controllers
     {
         private readonly BeSpokedContext _context;
 
-        public SalesController(BeSpokedContext context)
-        {
-            _context = context;
-        }
-
-        // GET: Sales
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.
-        //        Sales
-        //        .Include(s => s.Customer)
-        //        .Include(s => s.Product)
-        //        .Include(s => s.Salesperson)
-        //        .ToListAsync());
-        //}
+        public SalesController(BeSpokedContext context) => _context = context;
 
         public async Task<IActionResult> Index(SaleIndexViewModel viewModel)
         {
             SaleIndexViewModel saleIndex = new SaleIndexViewModel
             {
-                Sales = _context.
-                Sales.Where(s => s.SaleDate >= (viewModel.StartDate ?? DateTime.MinValue) && s.SaleDate <= (viewModel.EndDate ?? DateTime.MaxValue))
-                .Include(s => s.Customer)
-                .Include(s => s.Product)
-                .Include(s => s.Salesperson)
-                .ToList(),
-                StartDate = viewModel.StartDate?? DateTime.MinValue,
+                Sales = await _context.Sales
+                                    .Where(s => s.SaleDate >= (viewModel.StartDate ?? DateTime.MinValue)
+                                        && s.SaleDate <= (viewModel.EndDate ?? DateTime.MaxValue))
+                                    .Include(s => s.Customer)
+                                    .Include(s => s.Product)
+                                    .Include(s => s.Salesperson)
+                                    .OrderByDescending(s => s.SaleDate)
+                                    .ToListAsync(),
+                StartDate = viewModel.StartDate ?? DateTime.MinValue,
                 EndDate = viewModel.EndDate ?? DateTime.MaxValue
             };
             return View(saleIndex);
@@ -50,17 +38,10 @@ namespace BeSpoked.Controllers
         // GET: Sales/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var sale = await _context.Sales
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (sale == null)
-            {
-                return NotFound();
-            }
+            var sale = await _context.Sales.FirstOrDefaultAsync(m => m.id == id);
+            if (sale == null) return NotFound();
 
             return View(sale);
         }
@@ -68,7 +49,9 @@ namespace BeSpoked.Controllers
         // GET: Sales/Create
         public async Task<IActionResult> Create()
         {
-            SaleCreateViewModel viewModel = new SaleCreateViewModel() {
+            SaleCreateViewModel viewModel = new SaleCreateViewModel();
+
+            await Task.Run(() => viewModel = new SaleCreateViewModel() {
                 Salespeople = _context.Salespeople.Select(sp => new SelectListItem
                 {
                     Value = sp.id.ToString(),
@@ -85,10 +68,9 @@ namespace BeSpoked.Controllers
                     Text = $"{p.Manufacturer} {p.Name}"
                 }),
                 Sale = new Sale()
-            };
+            });
 
             return View(viewModel);
-            //return View();
         }
 
         // POST: Sales/Create
@@ -98,9 +80,9 @@ namespace BeSpoked.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SaleCreateViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
-                Sale sale = new Sale
+                var sale = new Sale
                 {
                     Salesperson = _context.Salespeople.First(sp => sp.id.ToString() == viewModel.SelectedSalesperson),
                     Customer = _context.Customers.First(c => c.id.ToString() == viewModel.SelectedCustomer),
@@ -117,16 +99,11 @@ namespace BeSpoked.Controllers
         // GET: Sales/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var sale = await _context.Sales.FindAsync(id);
-            if (sale == null)
-            {
-                return NotFound();
-            }
+            if (sale == null) return NotFound();
+
             return View(sale);
         }
 
@@ -137,12 +114,9 @@ namespace BeSpoked.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,SaleDate")] Sale sale)
         {
-            if (id != sale.id)
-            {
-                return NotFound();
-            }
+            if (id != sale.id) return NotFound();
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 try
                 {
@@ -151,14 +125,8 @@ namespace BeSpoked.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SaleExists(sale.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!SaleExists(sale.id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -168,17 +136,10 @@ namespace BeSpoked.Controllers
         // GET: Sales/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var sale = await _context.Sales
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (sale == null)
-            {
-                return NotFound();
-            }
+            var sale = await _context.Sales.FirstOrDefaultAsync(m => m.id == id);
+            if (sale == null) return NotFound();
 
             return View(sale);
         }
@@ -194,9 +155,6 @@ namespace BeSpoked.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SaleExists(int id)
-        {
-            return _context.Sales.Any(e => e.id == id);
-        }
+        private bool SaleExists(int id) => _context.Sales.Any(e => e.id == id);
     }
 }

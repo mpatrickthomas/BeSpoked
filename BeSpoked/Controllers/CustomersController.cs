@@ -14,40 +14,25 @@ namespace BeSpoked.Controllers
     {
         private readonly BeSpokedContext _context;
 
-        public CustomersController(BeSpokedContext context)
-        {
-            _context = context;
-        }
+        public CustomersController(BeSpokedContext context) => _context = context;
 
         // GET: Customers
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Customers.ToListAsync());
-        }
+        public async Task<IActionResult> Index() => View(await _context.Customers.ToListAsync());
 
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
+            var customer = await _context.Customers.FirstOrDefaultAsync(m => m.id == id);
+
+            if (customer == null) return NotFound();
 
             return View(customer);
         }
 
         // GET: Customers/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Customers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -56,7 +41,7 @@ namespace BeSpoked.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,FirstName,LastName,Address,PhoneNumber,StartDate")] Customer customer)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
@@ -68,16 +53,10 @@ namespace BeSpoked.Controllers
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
+            if (customer == null) return NotFound();
             return View(customer);
         }
 
@@ -88,12 +67,9 @@ namespace BeSpoked.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,FirstName,LastName,Address,PhoneNumber,StartDate")] Customer customer)
         {
-            if (id != customer.id)
-            {
-                return NotFound();
-            }
+            if (id != customer.id) return NotFound();
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 try
                 {
@@ -102,14 +78,8 @@ namespace BeSpoked.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!CustomerExists(customer.id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -119,17 +89,11 @@ namespace BeSpoked.Controllers
         // GET: Customers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
+            var customer = await _context.Customers.FirstOrDefaultAsync(m => m.id == id);
+
+            if (customer == null) return NotFound();
 
             return View(customer);
         }
@@ -145,9 +109,6 @@ namespace BeSpoked.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.id == id);
-        }
+        private bool CustomerExists(int id) => _context.Customers.Any(e => e.id == id);
     }
 }

@@ -1,27 +1,25 @@
 ﻿@model SalespersonDetailsViewModel
-@{
-    ViewData["Title"] = "ComissionReport";
-}
 
-<h1>Comission Report</h1>
-<div class="form-group">
-    @Html.LabelFor(model => model.Quarters, htmlAttributes: new { @class = "control-label col-md-2" })
-    <div class="col-md-10">
-        @Html.DropDownListFor(model => model.SelectedQuarter, Model.Quarters)
+<h2>Comissions Report for @($"{Model.Salesperson.FirstName} {Model.Salesperson.LastName}")</h2>
+
+    <div class="row">
+        @Html.HiddenFor(model => model.Salesperson.id)
+        @Html.DropDownListFor(model => model.ComissionReportViewModel.SelectedQuarter, Model.ComissionReportViewModel.QuarterValues)
+        @Html.DropDownListFor(model => model.ComissionReportViewModel.SelectedYear, Model.ComissionReportViewModel.YearValues)
+        <input type="submit" value="Generate Report" class="btn btn-primary" />
     </div>
-</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Sales.FirstOrDefault().SaleDate)
+                @Html.DisplayNameFor(model => model.ComissionReportViewModel.Sales.FirstOrDefault().SaleDate)
             </th>
             <th>Product</th>
             <th>Comission</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Sales)
+        @foreach (var item in Model.ComissionReportViewModel.Sales)
         {
             <tr>
                 <td>
@@ -39,5 +37,4 @@
     </tbody>
 </table>
 <hr />
-<h5>Total Comission: @(Model.Sales.Sum(item => item.Product.SalePrice * (item.Product.ComissionPercentage / 100)).ToString("C"))</h5>
-
+<h5>Total Comission: @(Model.ComissionReportViewModel.Sales.Sum(item => item.Product.SalePrice * (item.Product.ComissionPercentage / 100)).ToString("C"))</h5>

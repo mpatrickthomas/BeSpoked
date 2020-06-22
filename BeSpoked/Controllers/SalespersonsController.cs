@@ -9,6 +9,8 @@ using BeSpoked.Data;
 using BeSpoked.Data.Entities;
 using BeSpoked.Models;
 using static BeSpoked.Models.SalespersonDetailsViewModel;
+using Microsoft.AspNetCore.Razor.Language.Extensions;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace BeSpoked.Controllers
 {
@@ -16,89 +18,81 @@ namespace BeSpoked.Controllers
     {
         private readonly BeSpokedContext _context;
 
-        public SalespersonsController(BeSpokedContext context)
-        {
-            _context = context;
-        }
+        public SalespersonsController(BeSpokedContext context) => _context = context;
 
         // GET: Salespersons
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Salespeople.ToListAsync());
-        }
+        public async Task<IActionResult> Index() => View(await _context.Salespeople.OrderBy(s => s.LastName).ToListAsync());
 
         // GET: Salespersons/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? quarter, DateTime? year)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            //else if (quarter == null)
-            //{
-            //    quarter = 1;
-            //}
-            //else if( quarter < 1)
-            //{
-            //    quarter = 1;
-            //}else if(quarter > 4)
-            //{
-            //    quarter = 4;
-            //}
+            if (id == null) return NotFound();
 
-            var salesperson = await _context.Salespeople
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (salesperson == null)
-            {
-                return NotFound();
-            }
+            var salesperson = await _context.Salespeople.FirstOrDefaultAsync(m => m.id == id);
+            if (salesperson == null) return NotFound();
 
             var sales = _context.Sales
-                                    .Where(s => s.Salesperson.id == salesperson.id)
-                                        //&& s.SaleDate >= new DateTime(DateTime.Now.Year, 1, 1)
-                                        //&& s.SaleDate < new DateTime(DateTime.Now.Year, 3, 1))
                                     .Include(s => s.Product)
                                     .Include(s => s.Customer)
                                     .Include(s => s.Salesperson)
-                                    .ToList();
+                                    .ToList()
+                                    .Where(
+                                            s => s.Salesperson.id == salesperson.id
+                                            && s.SaleDate >= new DateTime(DateTime.Now.Year, 1, 1)
+                                            && s.SaleDate < new DateTime(DateTime.Now.Year, 3, 1)
+                                    );
 
-            return View(
-                new SalespersonDetailsViewModel
+            var viewmodel = new SalespersonDetailsViewModel
+            {
+                Salesperson = salesperson,
+                ComissionReportViewModel = new ComissionReportViewModel()
                 {
-                    Salesperson = salesperson,
-                    Sales = sales,
-                    Quarters = new List<SelectListItem>()
-                    {
-                        new SelectListItem
-                        {
-                            Value = FiscalQuarters.Q1.ToString(),
-                            Text = $"{FiscalQuarters.Q1} {DateTime.Now.Year}"
-                        },
-                        new SelectListItem
-                        {
-                            Value = FiscalQuarters.Q2.ToString(),
-                            Text = $"{FiscalQuarters.Q2} {DateTime.Now.Year}"
-                        },
-                        new SelectListItem
-                        {
-                            Value = FiscalQuarters.Q3.ToString(),
-                            Text = $"{FiscalQuarters.Q3} {DateTime.Now.Year}"
-                        },
-                        new SelectListItem
-                        {
-                            Value = FiscalQuarters.Q4.ToString(),
-                            Text = $"{FiscalQuarters.Q4} {DateTime.Now.Year}"
-                        },
-                    }
+                    SelectedQuarter = 1.ToString(), // Default to Q1 current year
+                    SelectedYear = DateTime.Now.Year.ToString(),
+                    Sales = sales
                 }
-            );
+            };
+
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        public IActionResult Details(SalespersonDetailsViewModel viewmodel)
+        {
+            viewmodel.Salesperson = _context.Salespeople.FirstOrDefault(s => s.id == viewmodel.Salesperson.id);
+
+            DateTime date = DateTime.Now;
+            int quarter = 1;
+
+            DateTime.TryParse($"1/1/{viewmodel.ComissionReportViewModel.SelectedYear}", out date);
+            int.TryParse(viewmodel.ComissionReportViewModel.SelectedQuarter, out quarter);
+
+            /*
+            Q1 - Jan - Mar
+            Q2 - Apr - Jun
+            Q3 - Jul - Sep
+            Q4 - Oct - Dec
+             */
+            DateTime startDate = new DateTime(date.Year, ((quarter - 1) * 3) + 1, 1),
+                endDate = new DateTime(date.Year, Math.Min((quarter * 3) + 1, 12), 1);
+
+
+            var sales = _context.Sales.Include(s => s.Product)
+                                    .Include(s => s.Customer)
+                                    .Include(s => s.Salesperson)
+                                    .ToList()
+                                    .Where(
+                                            s => s.Salesperson.id == viewmodel.Salesperson.id
+                                            && s.SaleDate >= startDate
+                                            && s.SaleDate < endDate
+                                    );
+            viewmodel.ComissionReportViewModel.Sales = sales;
+
+            return View(viewmodel);
         }
 
         // GET: Salespersons/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Salespersons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -107,11 +101,11 @@ namespace BeSpoked.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,FirstName,LastName,Address,PhoneNumber,StartDate,TerminationDate,Manager")] Salesperson salesperson)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 if (_context.Salespeople.Any(s => s.FirstName == salesperson.FirstName.Trim() && s.LastName == salesperson.LastName.Trim()))
                 {
-                    ViewBag.ErrorMessage = "This salesperson already exists in the system";
+                    this.ViewBag.ErrorMessage = "This salesperson already exists in the system";
                     return View(salesperson);
                 };
 
@@ -125,16 +119,10 @@ namespace BeSpoked.Controllers
         // GET: Salespersons/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var salesperson = await _context.Salespeople.FindAsync(id);
-            if (salesperson == null)
-            {
-                return NotFound();
-            }
+            if (salesperson == null) return NotFound();
             return View(salesperson);
         }
 
@@ -145,12 +133,9 @@ namespace BeSpoked.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,FirstName,LastName,Address,PhoneNumber,StartDate,TerminationDate,Manager")] Salesperson salesperson)
         {
-            if (id != salesperson.id)
-            {
-                return NotFound();
-            }
+            if (id != salesperson.id) return NotFound();
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 try
                 {
@@ -159,14 +144,8 @@ namespace BeSpoked.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SalespersonExists(salesperson.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!SalespersonExists(salesperson.id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -176,17 +155,10 @@ namespace BeSpoked.Controllers
         // GET: Salespersons/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var salesperson = await _context.Salespeople
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (salesperson == null)
-            {
-                return NotFound();
-            }
+            var salesperson = await _context.Salespeople.FirstOrDefaultAsync(m => m.id == id);
+            if (salesperson == null) return NotFound();
 
             return View(salesperson);
         }
@@ -202,9 +174,6 @@ namespace BeSpoked.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SalespersonExists(int id)
-        {
-            return _context.Salespeople.Any(e => e.id == id);
-        }
+        private bool SalespersonExists(int id) => _context.Salespeople.Any(e => e.id == id);
     }
 }

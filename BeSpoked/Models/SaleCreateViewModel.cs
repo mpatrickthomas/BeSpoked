@@ -10,12 +10,6 @@ namespace BeSpoked.Models
 {
     public class SaleCreateViewModel
     {
-        public SaleCreateViewModel()
-        {
-            Customers = new List<SelectListItem>();
-            Products = new List<SelectListItem>();
-            Salespeople = new List<SelectListItem>();
-        }
         public Sale Sale { get; set; }
 
         [Required]
@@ -35,5 +29,12 @@ namespace BeSpoked.Models
 
         [Display(Name = "Salesperson")]
         public IEnumerable<SelectListItem> Salespeople { get; set; }
+
+        public SaleCreateViewModel()
+        {
+            this.Customers = new List<SelectListItem>();
+            this.Products = new List<SelectListItem>();
+            this.Salespeople = new List<SelectListItem>();
+        }
     }
 }

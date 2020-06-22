@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BeSpoked.Data;
 using BeSpoked.Data.Entities;
@@ -14,40 +11,25 @@ namespace BeSpoked.Controllers
     {
         private readonly BeSpokedContext _context;
 
-        public ProductsController(BeSpokedContext context)
-        {
-            _context = context;
-        }
+        public ProductsController(BeSpokedContext context) => _context = context;
 
         // GET: Products
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Products.ToListAsync());
-        }
+        public async Task<IActionResult> Index() => View(await _context.Products.OrderBy(p => p.Manufacturer).ToListAsync());
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            var product = await _context.Products.FirstOrDefaultAsync(m => m.id == id);
+
+            if (product == null) return NotFound();
 
             return View(product);
         }
 
         // GET: Products/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -56,13 +38,13 @@ namespace BeSpoked.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Name,Manufacturer,Style,PurchasePrice,SalePrice,CurrentQuantity,ComissionPercentage")] Product product)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 if (_context.Products.Any(p => p.Name == product.Name.Trim() && p.Manufacturer == product.Manufacturer.Trim()))
                 {
-                    ViewBag.ErrorMessage = "This product already exists in the system";
+                    this.ViewBag.ErrorMessage = "This product already exists in the system";
                     return View(product);
-                };
+                }
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
@@ -74,16 +56,10 @@ namespace BeSpoked.Controllers
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
             return View(product);
         }
 
@@ -94,12 +70,9 @@ namespace BeSpoked.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,Name,Manufacturer,Style,PurchasePrice,SalePrice,CurrentQuantity,ComissionPercentage")] Product product)
         {
-            if (id != product.id)
-            {
-                return NotFound();
-            }
+            if (id != product.id) return NotFound();
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 try
                 {
@@ -108,14 +81,8 @@ namespace BeSpoked.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!ProductExists(product.id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -125,18 +92,10 @@ namespace BeSpoked.Controllers
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
+            var product = await _context.Products.FirstOrDefaultAsync(m => m.id == id);
+            if (product == null) return NotFound();
             return View(product);
         }
 
@@ -151,9 +110,6 @@ namespace BeSpoked.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.id == id);
-        }
+        private bool ProductExists(int id) => _context.Products.Any(e => e.id == id);
     }
 }
