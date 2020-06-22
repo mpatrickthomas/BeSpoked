@@ -79,7 +79,7 @@ namespace BeSpoked.Data
                         new Entities.Salesperson
                         {
                             FirstName = "Breonna",
-                            LastName = "Craquer",
+                            LastName = "Ritz",
                             Address = "203 Cheeseland Court",
                             StartDate = DateTime.UtcNow.AddDays(-256),
                             TerminationDate = DateTime.UtcNow.AddDays(-34),
@@ -99,7 +99,7 @@ namespace BeSpoked.Data
                     new Entities.Product
                     {
                         Name = "Try-cicle",
-                        Manufacturer = "Simkea",
+                        Manufacturer = "Cyclebikes",
                         Style = "Red",
                         PurchasePrice = 55m,
                         SalePrice = 40.66m,
